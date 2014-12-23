@@ -14,8 +14,13 @@ RUN apt-get update && \
         php-apc \
         wget
 
+# Install Composer
+RUN wget -q http://getcomposer.org/composer.phar &&\
+    mv composer.phar /usr/local/bin/composer &&\
+    chmod 0755 /usr/local/bin/composer
+
 # Install Suhosin
-RUN echo "deb http://repo.suhosin.org/ ubuntu-trusty main" >> /etc/apt/sources.list &&\
+RUN echo "deb http://repo.suhosin.org/ debian-wheezy main" >> /etc/apt/sources.list &&\
     wget -q https://sektioneins.de/files/repository.asc -O - | apt-key add -
 
 RUN apt-get update &&\
@@ -47,9 +52,6 @@ ENV APACHE_LOCK_DIR /var/lock/apache2
 
 # Send Apache2's error logs to STDERR for Docker to pick up
 RUN ln -sf /dev/stderr /var/log/apache2/error.log
-
-# Install composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 EXPOSE 80
 
